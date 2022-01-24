@@ -1,6 +1,7 @@
 ﻿using GamerMedia.Data;
 using GamerMedia.Data.Interfaces;
 using GamerMedia.Data.Repositories;
+using GamerMedia.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -8,23 +9,22 @@ namespace GamerMedia
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IConfiguration _config;
+        public Startup(IConfiguration config)
         {
-            Configuration = configuration;
+            _config = config;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddApplicationServices(_config);
+
             services.AddControllers();
 
             services.AddScoped<IUsersRepo, UsersRepo>();
 
-            services.AddDbContext<DataContext>(opts => opts.UseSqlServer(Configuration.GetConnectionString("gamerMediaDB")));
-
-            services.AddSingleton(_ => Configuration);
+            services.AddSingleton(_ => _config);
 
             services.AddSwaggerGen(c =>
             {

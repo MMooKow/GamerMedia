@@ -10,9 +10,9 @@ namespace GamerMedia.Data.Interfaces
 
         Task<string> DeleteUser(int id);
 
-        Task<User> CreateUser(User user);
+        Task<User> CreateUserAsync(User user);
 
-        Task<User> UpdateUser(User user, int id);
+        Task<User> UpdateUserAsync(int id, User user);
     }
 
 }

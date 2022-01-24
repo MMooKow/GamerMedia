@@ -14,7 +14,7 @@ namespace GamerMedia.Data.Repositories
             _context = context;
         }
 
-        public async Task<User> CreateUser(User user)
+        public async Task<User> CreateUserAsync(User user)
         {
             if(user != null)
             {
@@ -27,7 +27,7 @@ namespace GamerMedia.Data.Repositories
 
         public async Task<string> DeleteUser(int id)
         {
-            User user = _context.Users.Find(id);
+            User user = await _context.Users.FindAsync(id) ?? throw new ArgumentException();
             if (user != null)
             {
                 _context.Remove(user);
@@ -39,7 +39,7 @@ namespace GamerMedia.Data.Repositories
 
         public async Task<User> GetUserAsync(int id)
         {
-            User user = await _context.Users.FindAsync(id);
+            User user = await _context.Users.FindAsync(id) ?? throw new ArgumentException();
             if (user != null)
             {
                 return user;
@@ -58,9 +58,19 @@ namespace GamerMedia.Data.Repositories
 
         }
 
-        public Task<User> UpdateUser(User user, int id)
+        public async Task<User> UpdateUserAsync(int id, User user)
         {
-            throw new NotImplementedException();
+            User updatedUser = await _context.Users.FindAsync(id) ?? throw new ArgumentException();
+            if(user != null)
+            {
+                updatedUser.Username = user.Username;
+                updatedUser.LastName = user.LastName;
+                updatedUser.FirstName = user.FirstName;
+
+                await _context.SaveChangesAsync();
+                return updatedUser;
+            }else throw new ArgumentException(nameof(user));
+            
         }
     }
 }

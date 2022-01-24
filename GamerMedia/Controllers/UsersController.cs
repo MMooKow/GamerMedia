@@ -49,7 +49,7 @@ namespace GamerMedia.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateUserAsync(User user)
         {
-            await _usersRepo.CreateUser(user);
+            await _usersRepo.CreateUserAsync(user);
             if(user == null)
             {
                 return NotFound(user.Id);
@@ -62,8 +62,18 @@ namespace GamerMedia.Controllers
 
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> UpdateUserAsync(int id, User user)
         {
+            User updatedUser = await _usersRepo.UpdateUserAsync(id, user);
+            if(updatedUser != null)
+            {
+                return Ok(updatedUser);
+            }
+            else
+            {
+                return BadRequest("User not found.");
+            }
+
         }
 
         // DELETE api/<UsersController>/5
