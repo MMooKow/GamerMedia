@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using GamerMedia.Data.Interfaces;
-using GamerMedia.Data.Repositories;
 using GamerMedia.Data.Entities;
 
 namespace GamerMedia.Controllers
@@ -39,56 +38,43 @@ namespace GamerMedia.Controllers
             {
                 return NotFound(id);
             }
-            else
-            {
                 return Ok(user);
-            }
         }
 
         // POST api/<UsersController>
         [HttpPost]
-        public async Task<ActionResult> CreateUserAsync(User user)
+        public async Task<ActionResult> CreateUserAsync([FromBody] User user)
         {
             await _usersRepo.CreateUserAsync(user);
             if(user == null)
             {
                 return NotFound(user.Id);
             }
-            else
-            {
                 return Ok(user);
-            }
         }
 
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateUserAsync(int id, User user)
+        public async Task<ActionResult> UpdateUserAsync([FromBody] int id, User user)
         {
             User updatedUser = await _usersRepo.UpdateUserAsync(id, user);
-            if(updatedUser != null)
-            {
-                return Ok(updatedUser);
-            }
-            else
+            if(updatedUser == null)
             {
                 return BadRequest("User not found.");
             }
-
+                return Ok(updatedUser);
         }
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteUserAsync(int id)
         {
-            string result = await _usersRepo.DeleteUser(id);
-            if(result == "Owner not found")
+            string result = await _usersRepo.DeleteUserAsync(id);
+            if(result == "User not found")
             {
-                return NotFound($"Owner of id {id} was not found");
-            }else
-            {
-                return Ok("Success!");
+                return NotFound($"User of id {id} was not found");
             }
-
+                return Ok("Success!");
         }
     }
 }

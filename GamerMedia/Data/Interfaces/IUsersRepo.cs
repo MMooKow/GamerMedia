@@ -8,7 +8,7 @@ namespace GamerMedia.Data.Interfaces
 
         Task<User> GetUserAsync(int id);
 
-        Task<string> DeleteUser(int id);
+        Task<string> DeleteUserAsync(int id);
 
         Task<User> CreateUserAsync(User user);
 

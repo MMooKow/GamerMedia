@@ -1,6 +1,5 @@
 ﻿using GamerMedia.Data.Entities;
 using GamerMedia.Data.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace GamerMedia.Data.Repositories
@@ -25,16 +24,16 @@ namespace GamerMedia.Data.Repositories
 
         }
 
-        public async Task<string> DeleteUser(int id)
+        public async Task<string> DeleteUserAsync(int id)
         {
             User user = await _context.Users.FindAsync(id) ?? throw new ArgumentException();
             if (user != null)
             {
                 _context.Remove(user);
                 await _context.SaveChangesAsync();
-                return "Owner deleted";
+                return "User deleted";
             }
-            else throw new ArgumentException("Owner not found");
+            else throw new ArgumentException("User not found");
         }
 
         public async Task<User> GetUserAsync(int id)
@@ -52,7 +51,7 @@ namespace GamerMedia.Data.Repositories
             List<User> users = await _context.Users.ToListAsync();
             if (users == null)
             {
-                throw new NullReferenceException("No owners found");
+                throw new NullReferenceException("No users found");
             }
             else return users;
 
