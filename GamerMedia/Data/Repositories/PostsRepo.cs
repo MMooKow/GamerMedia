@@ -50,7 +50,9 @@ namespace GamerMedia.Data.Repositories
 
         public async Task<List<Post>> GetPostsAsync()
         {
-            List<Post> posts = await _context.Posts.ToListAsync();
+            List<Post> posts = await _context.Posts
+                .Where(x => x.IsActive == true)
+                .ToListAsync();
             if (posts == null)
             {
                 throw new NullReferenceException("No posts found");
@@ -83,11 +85,11 @@ namespace GamerMedia.Data.Repositories
             {
                 return null;
             }
-            if (post.IsActive == 0)
+            if (post.IsActive == false)
             {
                 return post;
             }
-            post.IsActive = 0;
+            post.IsActive = false;
             await _context.SaveChangesAsync();
             return post;
         }

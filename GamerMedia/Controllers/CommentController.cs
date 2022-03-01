@@ -62,8 +62,8 @@ namespace GamerMedia.Controllers
             return Ok(updatedCom);
         }
 
-        // PUT api/<CommentController>/Delist/5
-        [HttpPut("/Delist/{id}")]
+        // PATCH api/<CommentController>/5
+        [HttpPatch("{id}")]
         public async Task<ActionResult> DeleteCommentAsync(int id)
         {
             Comment delistResult = await _commentRepo.DelistCommentAsync(id);

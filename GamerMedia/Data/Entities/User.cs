@@ -15,7 +15,7 @@ namespace GamerMedia.Data.Entities
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string Username { get; set; } = null!;
-        public int IsActive { get; set; }
+        public bool IsActive { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Post> Posts { get; set; }

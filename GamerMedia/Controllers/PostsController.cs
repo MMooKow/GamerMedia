@@ -8,16 +8,16 @@ namespace GamerMedia.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
-        private readonly IPostsRepo _repo;
-        public PostsController(IPostsRepo repo)
+        private readonly IPostsRepo _postRepo;
+        public PostsController(IPostsRepo postRepo)
         {
-            _repo = repo;
+            _postRepo = postRepo;
         }
         // GET: api/<PostsController>
         [HttpGet]
         public async Task<ActionResult> GetPostsAsync()
         {
-            List<Post> postList = await _repo.GetPostsAsync();
+            List<Post> postList = await _postRepo.GetPostsAsync();
             if(postList == null)
             {
                 return NotFound("No users found");
@@ -29,7 +29,7 @@ namespace GamerMedia.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetPostAsync(int id)
         {
-            Post post = await _repo.GetPostAsync(id);
+            Post post = await _postRepo.GetPostAsync(id);
             if(post == null)
             {
                 return BadRequest(id);
@@ -41,7 +41,7 @@ namespace GamerMedia.Controllers
         [HttpPost]
         public async Task<ActionResult> CreatePostAsync([FromBody] Post post)
         {
-            Post createdPost = await _repo.CreatePostAsync(post);
+            Post createdPost = await _postRepo.CreatePostAsync(post);
             if(createdPost == null)
             {
                 return BadRequest(createdPost);
@@ -54,7 +54,7 @@ namespace GamerMedia.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdatePostAsync(int id, [FromBody] Post post)
         {
-            Post updatedPost = await _repo.UpdatePostAsync(id, post);
+            Post updatedPost = await _postRepo.UpdatePostAsync(id, post);
             if(updatedPost == null)
             {
                 return BadRequest(updatedPost);
@@ -66,12 +66,24 @@ namespace GamerMedia.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePostAsync(int id)
         {
-            string res = await _repo.DeletePostAsync(id);
+            string res = await _postRepo.DeletePostAsync(id);
             if(res == "Post not found")
             {
                 return BadRequest($"Post not found with id {id}");
             }
                 return Ok(res);
+        }
+
+        // PATCH api/<CommentController>/5
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> DelistPostAsync(int id)
+        {
+            Post delistResult = await _postRepo.DelistPostAsync(id);
+            if (delistResult == null)
+            {
+                return BadRequest(delistResult);
+            }
+            return Ok(delistResult);
         }
     }
 }

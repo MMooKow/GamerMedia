@@ -50,7 +50,7 @@ namespace GamerMedia.Data.Repositories
         public async Task<List<Comment>> GetCommentsAsync()
         {
             List<Comment> comments = await _context.Comment
-                .Where(x => x.IsActive == 1)
+                .Where(x => x.IsActive == true)
                 .ToListAsync();
             if (comments == null)
             {
@@ -83,11 +83,11 @@ namespace GamerMedia.Data.Repositories
             {
                 return null;
             }
-            if(comment.IsActive == 0)
+            if(comment.IsActive == false)
             {
                 return comment;
             }
-            comment.IsActive = 0;
+            comment.IsActive = false;
             await _context.SaveChangesAsync();
             return comment;
         }

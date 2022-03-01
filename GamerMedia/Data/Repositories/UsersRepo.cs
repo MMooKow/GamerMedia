@@ -15,13 +15,13 @@ namespace GamerMedia.Data.Repositories
 
         public async Task<User> CreateUserAsync(User user)
         {
-            if(user != null)
+            if(user == null)
             {
-                await _context.AddAsync(user);
-                await _context.SaveChangesAsync();
-                return user; 
-            }else throw new ArgumentNullException(nameof(user));
-
+               throw new ArgumentNullException(nameof(user));
+            }
+            await _context.AddAsync(user);
+            await _context.SaveChangesAsync();
+            return user;
         }
 
         public async Task<string> DeleteUserAsync(int id)
@@ -48,7 +48,9 @@ namespace GamerMedia.Data.Repositories
 
         public async Task<List<User>> GetUsersAsync()
         {
-            List<User> users = await _context.Users.ToListAsync();
+            List<User> users = await _context.Users
+                .Where(x => x.IsActive == true)
+                .ToListAsync();
             if (users == null)
             {
                 throw new NullReferenceException("No users found");
@@ -81,11 +83,11 @@ namespace GamerMedia.Data.Repositories
             {
                 return null;
             }
-            if (user.IsActive == 0)
+            if (user.IsActive == false)
             {
                 return user;
             }
-            user.IsActive = 0;
+            user.IsActive = false;
             await _context.SaveChangesAsync();
             return user;
         }

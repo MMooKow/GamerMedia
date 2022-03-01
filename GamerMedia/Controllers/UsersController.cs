@@ -23,10 +23,7 @@ namespace GamerMedia.Controllers
             {
                 return NotFound();
             }
-            else
-            {
                 return Ok(user);
-            }
         }
 
         // GET api/<UsersController>/5
@@ -75,6 +72,18 @@ namespace GamerMedia.Controllers
                 return NotFound($"User of id {id} was not found");
             }
                 return Ok("Success!");
+        }
+
+        // PATCH0 api/<CommentController>/5
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> DelistUserAsync(int id)
+        {
+            User delistResult = await _usersRepo.DelistUserAsync(id);
+            if (delistResult == null)
+            {
+                return BadRequest(delistResult);
+            }
+            return Ok(delistResult);
         }
     }
 }
