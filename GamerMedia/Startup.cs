@@ -40,14 +40,12 @@ namespace GamerMedia
                 options.AddPolicy("AllowNgDev", policy =>
                     policy.WithOrigins("http://localhost:4200")
                         .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials());
+                        .AllowAnyHeader());
 
                 options.AddPolicy("AllowProduction", policy =>
-                     policy.WithOrigins("http://localhost:4200")
+                     policy.WithOrigins("https://localhost:4200")
                          .AllowAnyMethod()
-                         .AllowAnyHeader()
-                         .AllowCredentials());
+                         .AllowAnyHeader());
             });
             
             services.AddFluentValidation(cfg =>
@@ -69,7 +67,7 @@ namespace GamerMedia
             }
 
             // TODO: for security, make sure this is more defined later on
-            app.UseCors("AllowNg");
+            app.UseCors("AllowNgDev");
 
             if (env.IsDevelopment())
             {
