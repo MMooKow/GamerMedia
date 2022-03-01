@@ -1,8 +1,8 @@
-﻿using GamerMedia.Data;
+﻿using FluentValidation.AspNetCore;
+using GamerMedia.Data;
 using GamerMedia.Data.Interfaces;
 using GamerMedia.Data.Repositories;
 using GamerMedia.Extensions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 namespace GamerMedia
@@ -24,11 +24,36 @@ namespace GamerMedia
 
             services.AddScoped<IUsersRepo, UsersRepo>();
 
+            services.AddScoped<IPostsRepo, PostsRepo>();
+
+            services.AddScoped<ICommentRepo, CommentRepo>();
+
             services.AddSingleton(_ => _config);
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Gamer_Media", Version = "v1" });
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowNgDev", policy =>
+                    policy.WithOrigins("http://localhost:4200")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+
+                options.AddPolicy("AllowProduction", policy =>
+                     policy.WithOrigins("http://localhost:4200")
+                         .AllowAnyMethod()
+                         .AllowAnyHeader()
+                         .AllowCredentials());
+            });
+            
+            services.AddFluentValidation(cfg =>
+            {
+                cfg.DisableDataAnnotationsValidation = true;
+                cfg.RegisterValidatorsFromAssemblyContaining<Startup>();
             });
         }
 
@@ -44,7 +69,7 @@ namespace GamerMedia
             }
 
             // TODO: for security, make sure this is more defined later on
-            app.UseCors(opts => opts.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors("AllowNg");
 
             if (env.IsDevelopment())
             {

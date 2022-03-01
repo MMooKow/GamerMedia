@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using GamerMedia.Data.Interfaces;
+using GamerMedia.Data.Entities;
 
 namespace GamerMedia.Controllers
 {
@@ -6,36 +8,71 @@ namespace GamerMedia.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
+        private readonly ICommentRepo _commentRepo;
+        public CommentController(ICommentRepo commentRepo)
+        {
+            _commentRepo = commentRepo;
+        }
+
         // GET: api/<CommentController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult> GetCommentsAsync()
         {
-            return new string[] { "value1", "value2" };
+            List<Comment> comments = await _commentRepo.GetCommentsAsync();
+            if(comments == null)
+            {
+                return NotFound("No comments found");
+            }
+                return Ok(comments);
         }
 
         // GET api/<CommentController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult> GetComment(int id)
         {
-            return "value";
+            Comment comment = await _commentRepo.GetCommentAsync(id);
+            if(comment == null)
+            {
+                return NotFound($"No comment with id {id} was found.");
+            }
+                return Ok(comment);
         }
 
         // POST api/<CommentController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> CreateCommentAsync([FromBody] Comment comment)
         {
+            Comment createdCom = await _commentRepo.CreateCommentAsync(comment);
+            if (createdCom == null)
+            {
+                return BadRequest("Unable to create comment. Input error");
+            }
+                return Ok(createdCom);
         }
 
         // PUT api/<CommentController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> UpdateCommentAsync(int id, [FromBody] Comment comment)
         {
+            Comment updatedCom = await _commentRepo.UpdateCommentAsync(id, comment);
+            if (updatedCom == null)
+            {
+                return BadRequest($"Update with id {id} was not sucessful");
+            }
+            return Ok(updatedCom);
         }
 
-        // DELETE api/<CommentController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // PUT api/<CommentController>/Delist/5
+        [HttpPut("/Delist/{id}")]
+        public async Task<ActionResult> DeleteCommentAsync(int id)
         {
+            Comment delistResult = await _commentRepo.DelistCommentAsync(id);
+            if (delistResult == null)
+            {
+                return BadRequest(delistResult);
+            }
+            return Ok(delistResult);
         }
+
     }
 }

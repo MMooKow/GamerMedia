@@ -1,5 +1,4 @@
-﻿using GamerMedia.Data;
-using GamerMedia.Data.Entities;
+﻿using GamerMedia.Data.Entities;
 using GamerMedia.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +27,7 @@ namespace GamerMedia.Data.Repositories
 
         public async Task<string> DeleteCommentAsync(int id)
         {
-            Comment comment = await _context.Comments.FindAsync(id) ?? throw new ArgumentException();
+            Comment comment = await _context.Comment.FindAsync(id) ?? throw new ArgumentException();
             if (comment != null)
             {
                 _context.Remove(comment);
@@ -40,7 +39,7 @@ namespace GamerMedia.Data.Repositories
 
         public async Task<Comment> GetCommentAsync(int id)
         {
-            Comment comment = await _context.Comments.FindAsync(id) ?? throw new ArgumentException();
+            Comment comment = await _context.Comment.FindAsync(id) ?? throw new ArgumentException();
             if (comment != null)
             {
                 return comment;
@@ -50,7 +49,9 @@ namespace GamerMedia.Data.Repositories
 
         public async Task<List<Comment>> GetCommentsAsync()
         {
-            List<Comment> comments = await _context.Comments.ToListAsync();
+            List<Comment> comments = await _context.Comment
+                .Where(x => x.IsActive == 1)
+                .ToListAsync();
             if (comments == null)
             {
                 throw new NullReferenceException("No comments found");
@@ -61,7 +62,7 @@ namespace GamerMedia.Data.Repositories
 
         public async Task<Comment> UpdateCommentAsync(int id, Comment comment)
         {
-            Comment updatedComment = await _context.Comments.FindAsync(id) ?? throw new ArgumentException();
+            Comment updatedComment = await _context.Comment.FindAsync(id) ?? throw new ArgumentException();
             if (comment != null)
             {
                 updatedComment.Body = comment.Body;
@@ -71,6 +72,24 @@ namespace GamerMedia.Data.Repositories
             }
             else throw new ArgumentException(nameof(comment));
 
+        }
+
+        public async Task<Comment> DelistCommentAsync(int id)
+        {
+            Comment comment = await _context.Comment
+                 .Where(x => x.Id == id)
+                 .FirstOrDefaultAsync() ?? throw new ArgumentException();
+            if (comment == null)
+            {
+                return null;
+            }
+            if(comment.IsActive == 0)
+            {
+                return comment;
+            }
+            comment.IsActive = 0;
+            await _context.SaveChangesAsync();
+            return comment;
         }
     }
 }

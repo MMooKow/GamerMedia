@@ -71,5 +71,23 @@ namespace GamerMedia.Data.Repositories
             }else throw new ArgumentException(nameof(user));
             
         }
+
+        public async Task<User> DelistUserAsync(int id)
+        {
+            User user = await _context.Users
+                 .Where(x => x.Id == id)
+                 .FirstOrDefaultAsync() ?? throw new ArgumentException();
+            if (user == null)
+            {
+                return null;
+            }
+            if (user.IsActive == 0)
+            {
+                return user;
+            }
+            user.IsActive = 0;
+            await _context.SaveChangesAsync();
+            return user;
+        }
     }
 }

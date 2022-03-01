@@ -55,7 +55,7 @@ namespace GamerMedia.Controllers
 
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateUserAsync([FromBody] int id, User user)
+        public async Task<ActionResult> UpdateUserAsync(int id,[FromBody] User user)
         {
             User updatedUser = await _usersRepo.UpdateUserAsync(id, user);
             if(updatedUser == null)

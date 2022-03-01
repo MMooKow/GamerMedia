@@ -1,4 +1,5 @@
 ﻿using GamerMedia.Data.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GamerMedia.Data.Interfaces
 {
@@ -12,5 +13,8 @@ namespace GamerMedia.Data.Interfaces
 
         Task<Post> CreatePostAsync(Post post);
 
-        Task<Post> UpdatePostAsync(int id, Post post);
+        Task<Post> UpdatePostAsync(int id, [FromBody]Post post);
+
+        Task<Post> DelistPostAsync(int id);
+    }
 }

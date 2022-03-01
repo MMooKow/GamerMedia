@@ -1,4 +1,5 @@
 ﻿using GamerMedia.Data.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GamerMedia.Data.Interfaces
 {
@@ -12,6 +13,8 @@ namespace GamerMedia.Data.Interfaces
 
         Task<Comment> CreateCommentAsync(Comment comment);
 
-        Task<Comment> UpdateCommentAsync(int id, Comment comment);
+        Task<Comment> UpdateCommentAsync(int id, [FromBody]Comment comment);
+
+        Task<Comment> DelistCommentAsync(int id);
     }
 }

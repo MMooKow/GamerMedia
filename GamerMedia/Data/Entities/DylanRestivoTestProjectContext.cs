@@ -28,6 +28,8 @@ namespace GamerMedia.Data.Entities
 
                 entity.Property(e => e.Created).HasColumnType("date");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.PostId)
@@ -44,6 +46,8 @@ namespace GamerMedia.Data.Entities
             {
                 entity.Property(e => e.Created).HasColumnType("date");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Title).HasMaxLength(50);
 
                 entity.HasOne(d => d.User)
@@ -55,6 +59,8 @@ namespace GamerMedia.Data.Entities
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.FirstName).HasMaxLength(35);
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.LastName).HasMaxLength(35);
 

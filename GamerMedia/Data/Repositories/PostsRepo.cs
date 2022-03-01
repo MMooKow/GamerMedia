@@ -73,5 +73,23 @@ namespace GamerMedia.Data.Repositories
             else throw new ArgumentException(nameof(post));
 
         }
+
+        public async Task<Post> DelistPostAsync(int id)
+        {
+            Post post = await _context.Posts
+                 .Where(x => x.Id == id)
+                 .FirstOrDefaultAsync() ?? throw new ArgumentException();
+            if (post == null)
+            {
+                return null;
+            }
+            if (post.IsActive == 0)
+            {
+                return post;
+            }
+            post.IsActive = 0;
+            await _context.SaveChangesAsync();
+            return post;
+        }
     }
 }

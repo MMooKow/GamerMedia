@@ -1,4 +1,5 @@
 ﻿using GamerMedia.Data.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GamerMedia.Data.Interfaces
 {
@@ -12,7 +13,9 @@ namespace GamerMedia.Data.Interfaces
 
         Task<User> CreateUserAsync(User user);
 
-        Task<User> UpdateUserAsync(int id, User user);
+        Task<User> UpdateUserAsync(int id,[FromBody] User user);
+
+        Task<User> DelistUserAsync(int id);
     }
 
 }
